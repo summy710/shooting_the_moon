@@ -42,6 +42,7 @@ cc.Class({
 
     init(game) {
         this.game = game;
+        this.record = game.nextScore;
         this.recordLabel.string = '' + game.nextScore;
         this.node.parent = game.content;
         this.node.position = cc.p(0, (game.nextScore - game.score) / 100 * 1440 - 360);
@@ -51,10 +52,10 @@ cc.Class({
 
     update (dt) {
         let game = this.game;
-        let y = (game.nextScore - game.score) / 100 * 1440 - 360;
+        let y = (this.record - game.score) / 100 * 1440 - 360;
         this.node.y -= this.speed * dt;
         this.node.y = Math.max(y, this.node.y);
-        if (this.node.y == -360) {
+        if (this.node.y <= -360) {
             this.node.parent = null;
         }
     },

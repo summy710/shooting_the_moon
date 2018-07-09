@@ -75,45 +75,52 @@ var common = {
 
     playAudio(audioClip) {
         if (!this.bSound) return;
-        cc.audioEngine.play(audioClip, false, 1);
+        if (CC_WECHATGAME) {
+            this.context = wx.createInnerAudioContext();
+            this.context.autoplay = true;
+            this.context.loop = false;
+            this.context.src = audioClip + '.mp3';
+            this.context.play();  
+        } else {
+            // cc.audioEngine.play(audioClip, false, 1);
+            cc.loader.load(cc.url.raw('resources/audio/' + audioClip +'.mp3'), function(err, clip) {
+                this.bgm = cc.audioEngine.play(clip, false, 1);
+            }.bind(this));
+        }
     },
 
-    // playJump(audioClip) {
-    //     if (!this.bSound) return;
-    //     if (CC_WECHATGAME) {
-    //         this.context = wx.createInnerAudioContext();
-    //         this.context.autoplay = true;
-    //         this.context.loop = false;
-    //         this.context.src = 'jump.mp3';
-    //         this.context.play();
-    //     } else {
-    //         cc.audioEngine.play(audioClip, false, 1);
-    //     }
-    // },
-
     playBGM() {
-        // if (this.bPlay || !this.bSound) return;
-        // this.bPlay = true;
-        // if (CC_WECHATGAME) {
-        //     this.music = wx.createInnerAudioContext();
-        //     this.music.autoplay = true;
-        //     this.music.loop = true;
-        //     this.music.src = 'BGM.mp3';
-        //     this.music.play();
-        // } else {
-        //     cc.loader.load(cc.url.raw('resources/audio/BGM.mp3'), function(err, clip) {
-        //         this.bgm = cc.audioEngine.play(clip, true, 1);
-        //     }.bind(this));
-        // }
+        if (this.bPlay || !this.bSound) return;
+        if (CC_WECHATGAME) {
+            if (this.music) return;
+            this.music = wx.createInnerAudioContext();
+            this.music.autoplay = true;
+            this.music.loop = true;
+            this.music.volume = 0.5;
+            this.music.src = 'BGM.mp3';
+            this.music.play();
+            let self = this;
+            wx.onShow(function () {
+              self.music.play()
+            })
+        } else {
+            if (this.bgm) return;
+            cc.loader.load(cc.url.raw('resources/audio/BGM.mp3'), function(err, clip) {
+                this.bgm = cc.audioEngine.play(clip, true, 0.5);
+            }.bind(this));
+        }
+        this.bPlay = true;
     },
 
     stopBGM() {
-        // this.bPlay = false;
-        // if (CC_WECHATGAME) {
-        //     this.music.stop();
-        // } else {
-        //     cc.audioEngine.stop(this.bgm);
-        // }
+        this.bPlay = false;
+        if (CC_WECHATGAME) {
+            if (this.music) this.music.stop();
+            this.music = null;
+        } else {
+            if (this.bgm) cc.audioEngine.stop(this.bgm);
+            this.bgm = null;
+        }
     }
 };
 

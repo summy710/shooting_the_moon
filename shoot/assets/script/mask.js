@@ -7,6 +7,7 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
+const co = require('Common');
 
 cc.Class({
     extends: cc.Component,
@@ -32,8 +33,7 @@ cc.Class({
         game:cc.Node,
 
         eyes:[cc.Node],
-        eb:[cc.Node],
-
+        eb:[cc.Node]
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -88,6 +88,7 @@ cc.Class({
 		this.hitCount++;
     	if (this.hitCount < 5) {
     		this.node.getComponent(cc.Animation).play('shoot');
+	        co.playAudio('hit1');
     		let state = this.node.getComponent(cc.Animation).getAnimationState('shoot');
 	        state.on('finished', () => {
 	            self.pause = false;
@@ -103,6 +104,7 @@ cc.Class({
 	        });
     	} else {
 	    	this.node.getComponent(cc.Animation).play('angry');
+	        co.playAudio('hit2');
 	    	let state = this.node.getComponent(cc.Animation).getAnimationState('angry');
 	        state.on('finished', () => {
 	            self.pause = false;
@@ -121,8 +123,10 @@ cc.Class({
     	let game = this.game.getComponent('game');
     	if (game.life == 1) {
     		this.node.getComponent(cc.Animation).play('wink');
+	        co.playAudio('miss');
     	} else {
     		this.node.getComponent(cc.Animation).play('laugh');
+	        co.playAudio('gameover');
 	    	let state = this.node.getComponent(cc.Animation).getAnimationState('laugh');
 	    	let self = this;
 	        state.on('finished', () => {
@@ -137,7 +141,7 @@ cc.Class({
     	let size = this.node.getContentSize();
     	let c_size = this.content.getContentSize();
     	let game = this.game.getComponent('game');
-    	let speed = game.speed * (game.multi + this.hitCount * 0.05);
+    	let speed = game.speed * (game.multi + this.hitCount * 0.1);
     	this.node.x += this.vec.x * speed * dt;
     	this.node.y += this.vec.y * speed * dt;
     	if (this.node.x <= -(c_size.width / 2 - size.width / 2 - 10)) {

@@ -44,7 +44,6 @@ cc.Class({
         recordPb:cc.Prefab,
         resultNode:cc.Node,
         resultScore:cc.Label,
-        clickAu:cc.AudioClip
     },
 
     // LIFE-CYCLE CALLBACKS:
@@ -70,6 +69,7 @@ cc.Class({
     },
 
     onLoad () {
+        co.playBGM();
         this.touchTips.active = true;
         this.touchNode.on(cc.Node.EventType.TOUCH_START, this._touchStart, this);
         this.akumas = [];
@@ -117,6 +117,7 @@ cc.Class({
         let rocket = cc.instantiate(this.rocketPb);
         rocket.getComponent('rocket').init(this, position);
         this.rocket = rocket;
+        co.playAudio('shoot');
     },
 
     hit(score) {
@@ -126,8 +127,8 @@ cc.Class({
         this.node.runAction(cc.sequence(cc.delayTime(0.5), cc.callFunc(()=>{
             self.bShoot = false;
         })));
-        
-        if (this.multiCount == 3) score *= 2;
+
+        let m = this.multiCount >= 3 ? 2 : 1;
 
         if (score != 10) {
             this.multiSp.active = false;
@@ -150,6 +151,7 @@ cc.Class({
             this.multiCount++;
             this.multiCount = Math.min(3, this.multiCount);
         }
+        score *= m;
         let show_score = cc.instantiate(this.scorePb);
         show_score.getComponent('score').init(score, this);
         if (this.score + score >= this.nextScore) {
@@ -166,8 +168,8 @@ cc.Class({
                 }
                 this.life++;
             }
-            this.nextScore += 100;
-            this.multi += 0.2;
+            this.nextScore = (Math.floor((this.score + score) / 100) + 1) * 100;
+            this.multi += 0.4;
             this.createRecord(this);
         }
         this.score += score;
@@ -189,6 +191,13 @@ cc.Class({
             }
         }
         if (akuma) akuma.parent = null;
+
+
+        this.multiSp.active = false;
+        for (var i = 0; i < this.multiProSp.length; i++) {
+            this.multiProSp[i].active = false;
+        }
+        this.multiCount = 0;
         
         if (this.life) {
             this.life--;
@@ -221,23 +230,24 @@ cc.Class({
     },
 
     back() {
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
+        co.stopBGM();
         cc.director.loadScene('main');
     },
 
     restart() {
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         cc.director.loadScene('game');
     },
 
     share() {
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         let self = this;
         let str = '月亮送了我' + this.score + '分，你也来试试';
         if (CC_WECHATGAME) {
             wx.shareAppMessage({
                 title: str,
-                imageUrl: co.getSharePicPath(),
+                imageUrl: co.getSharePicPath()
             });
         }
     },

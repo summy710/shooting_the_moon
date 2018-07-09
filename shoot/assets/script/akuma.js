@@ -7,6 +7,7 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
+const co = require('Common');
 
 cc.Class({
     extends: cc.Component,
@@ -45,9 +46,9 @@ cc.Class({
         this.node.runAction(
             cc.sequence(
                 cc.spawn(
-                    cc.scaleTo(0.2, 1),
-                    cc.fadeIn(0.2),
-                    cc.moveBy(0.2, -150, -60)
+                    cc.scaleTo(0.3, 1),
+                    // cc.fadeIn(0.2),
+                    cc.moveBy(0.3, -150, -60)
                 ),
                 cc.callFunc(()=>{
                     self.refreshVec();
@@ -63,13 +64,14 @@ cc.Class({
         this.node.parent = game.content;
         let position = mask.position;
         this.node.position = cc.pAdd(position, cc.p(0, -10));
-        this.node.opacity = 0;
+        // this.node.opacity = 0;
         this.node.scale = 0.1;
     },
 
     hit() {
         this.pause = true;
         this.node.getComponent(cc.Animation).play('akuma');
+        co.playAudio('akuma');
         let state = this.node.getComponent(cc.Animation).getAnimationState('akuma');
         let self = this;
         state.on('finished', () => {

@@ -32,7 +32,6 @@ cc.Class({
         shakeCheck:cc.Node,
         rankNode:cc.Node,
         ranksv:cc.Sprite,
-        clickAu:cc.AudioClip,
         btns:[cc.Button]
     },
 
@@ -50,7 +49,6 @@ cc.Class({
             window.sharedCanvas.width = 720;
             window.sharedCanvas.height = 1280;
         }
-        co.playBGM();
     },
 
     startEnd() {
@@ -75,19 +73,18 @@ cc.Class({
     startGame() {
         if (this.bAni) return;
         this.bAni = true;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         let self = this;
         this.node.getComponent(cc.Animation).play('start');
         let state = this.node.getComponent(cc.Animation).getAnimationState('start');
         state.on('finished', () => {
             self.startEnd();
         });
-        co.showTip(this.node, '加载资源中，请稍候...');
     },
 
     friendRank() {
         if (this.bAni) return;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         this.showRank();
         if (CC_WECHATGAME) {
             window.wx.postMessage({
@@ -106,7 +103,7 @@ cc.Class({
     },
 
     closeRank() {
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         this.rankNode.active = false;
         this.refreshRank = false;
         this.bAni = false;
@@ -116,9 +113,8 @@ cc.Class({
     share () {
         cc.log('share');
         if (this.bAni) return;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         if (CC_WECHATGAME) {
-            co.stopBGM();
             let str = '贱贱的月亮，快来一起射哭它';
             wx.shareAppMessage({
                 title: str,
@@ -129,7 +125,7 @@ cc.Class({
 
     option () {
         if (this.bAni) return;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         this.bAni = true;
         this.optionNode.active = true;
         this.soundCheck.active = co.getSoundStatus();
@@ -139,14 +135,14 @@ cc.Class({
 
     optionClose() {
         this.bAni = false;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         this.optionNode.active = false;
         this.enableBtn();
     },
 
     soundClick() {
         let self = this;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         co.changeSoundStatus((b) => {
             self.soundCheck.active = b;
         });
@@ -154,7 +150,7 @@ cc.Class({
 
     shakeClick() {
         let self = this;
-        co.playAudio(this.clickAu);
+        co.playAudio('click');
         co.changeShakeStatus((b) => {
             self.shakeCheck.active = b;
         });

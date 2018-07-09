@@ -2265,6 +2265,20 @@
       {
         "__id__": 48
       }
+    ],
+    "gameoverAu": {
+      "__uuid__": "da929a1e-588f-4de4-8430-c035eb72e574"
+    },
+    "missAu": {
+      "__uuid__": "a677855e-6cac-4375-8d23-e55ca82dfa49"
+    },
+    "hitAu": [
+      {
+        "__uuid__": "449af683-b4ba-43af-a41a-465dd7b6362a"
+      },
+      {
+        "__uuid__": "f7a06642-883a-41cd-8dd2-c2ddf4a1d0e3"
+      }
     ]
   },
   {
@@ -5644,6 +5658,12 @@
     },
     "resultScore": {
       "__id__": 128
+    },
+    "clickAu": {
+      "__uuid__": "9e06ca9e-bcd3-4349-bcb0-0e7f70ef75cd"
+    },
+    "shootAu": {
+      "__uuid__": "6873f3f8-b24e-4ea7-b7d7-9246a5a9eab4"
     }
   }
 ]
